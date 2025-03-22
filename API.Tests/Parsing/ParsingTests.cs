@@ -44,6 +44,7 @@ public class ParsingTests
     [InlineData("DEAD Tube Prologue", "DEAD Tube Prologue")]
     [InlineData("DEAD Tube Prologue SP01", "DEAD Tube Prologue")]
     [InlineData("DEAD_Tube_Prologue SP01", "DEAD Tube Prologue")]
+    [InlineData("SP01 1. DEAD Tube Prologue", "1. DEAD Tube Prologue")]
     public void CleanSpecialTitleTest(string input, string expected)
     {
         Assert.Equal(expected, CleanSpecialTitle(input));
@@ -251,6 +252,7 @@ public class ParsingTests
     [InlineData("ch1/backcover.png", false)]
     [InlineData("backcover.png", false)]
     [InlineData("back_cover.png", false)]
+    [InlineData("LD Blacklands #1 35 (back cover).png", false)]
     public void IsCoverImageTest(string inputPath, bool expected)
     {
         Assert.Equal(expected, IsCoverImage(inputPath));

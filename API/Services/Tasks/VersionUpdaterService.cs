@@ -51,7 +51,7 @@ public interface IVersionUpdaterService
     Task<UpdateNotificationDto?> CheckForUpdate();
     Task PushUpdate(UpdateNotificationDto update);
     Task<IList<UpdateNotificationDto>> GetAllReleases(int count = 0);
-    Task<int> GetNumberOfReleasesBehind();
+    Task<int> GetNumberOfReleasesBehind(bool stableOnly = false);
 }
 
 
@@ -112,6 +112,10 @@ public partial class VersionUpdaterService : IVersionUpdaterService
         return dto;
     }
 
+    /// <summary>
+    /// Will add any extra (nightly) updates from the latest stable. Does not back-fill anything prior to the latest stable.
+    /// </summary>
+    /// <param name="dtos"></param>
     private async Task EnrichWithNightlyInfo(List<UpdateNotificationDto> dtos)
     {
         var dto = dtos[0]; // Latest version
@@ -301,7 +305,7 @@ public partial class VersionUpdaterService : IVersionUpdaterService
         }
 
         // If we're on a nightly build, enrich the information
-        if (updateDtos.Count != 0 && BuildInfo.Version > new Version(updateDtos[0].UpdateVersion))
+        if (updateDtos.Count != 0) // && BuildInfo.Version > new Version(updateDtos[0].UpdateVersion)
         {
             await EnrichWithNightlyInfo(updateDtos);
         }
@@ -397,22 +401,25 @@ public partial class VersionUpdaterService : IVersionUpdaterService
     }
 
 
-    public async Task<int> GetNumberOfReleasesBehind()
+    /// <summary>
+    /// Returns the number of releases ahead of this install version. If this install version is on a nightly,
+    /// then include nightly releases, otherwise only count Stable releases.
+    /// </summary>
+    /// <param name="stableOnly">Only count Stable releases </param>
+    /// <returns></returns>
+    public async Task<int> GetNumberOfReleasesBehind(bool stableOnly = false)
     {
         var updates = await GetAllReleases();
 
         // If the user is on nightly, then we need to handle releases behind differently
-        if (updates[0].IsPrerelease)
+        if (!stableOnly && (updates[0].IsPrerelease || updates[0].IsOnNightlyInRelease))
         {
-            return Math.Min(0, updates
-                .TakeWhile(update => update.UpdateVersion != update.CurrentVersion)
-                .Count() - 1);
+            return updates.Count(u => u.IsReleaseNewer);
         }
 
-        return Math.Min(0, updates
+        return updates
             .Where(update => !update.IsPrerelease)
-            .TakeWhile(update => update.UpdateVersion != update.CurrentVersion)
-            .Count());
+            .Count(u => u.IsReleaseNewer);
     }
 
     private UpdateNotificationDto? CreateDto(GithubReleaseMetadata? update)

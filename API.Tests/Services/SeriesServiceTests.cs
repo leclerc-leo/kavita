@@ -59,6 +59,7 @@ public class SeriesServiceTests : AbstractDbTest
             Substitute.For<ITaskScheduler>(), Substitute.For<ILogger<SeriesService>>(),
             Substitute.For<IScrobblingService>(), locService, Substitute.For<IReadingListService>());
     }
+
     #region Setup
 
     protected override async Task ResetDb()
