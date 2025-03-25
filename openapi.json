@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Kavita (v0.8.5.18)",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.5.18",
+    "title": "Kavita (v0.8.5.19)",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.5.19",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
@@ -11477,6 +11477,7 @@
         "tags": [
           "Settings"
         ],
+        "summary": "Returns the base url for this instance (if set)",
         "responses": {
           "200": {
             "description": "OK",
@@ -14240,10 +14241,12 @@
         "tags": [
           "Volume"
         ],
+        "summary": "Returns the appropriate Volume",
         "parameters": [
           {
             "name": "volumeId",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "integer",
               "format": "int32"
