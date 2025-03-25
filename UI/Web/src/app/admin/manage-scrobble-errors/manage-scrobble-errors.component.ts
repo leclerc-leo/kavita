@@ -23,23 +23,19 @@ import {SeriesService} from "../../_services/series.service";
 import {EditSeriesModalComponent} from "../../cards/_modals/edit-series-modal/edit-series-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {FilterPipe} from "../../_pipes/filter.pipe";
-import {LoadingComponent} from "../../shared/loading/loading.component";
 import {TranslocoModule} from "@jsverse/transloco";
-import {DefaultDatePipe} from "../../_pipes/default-date.pipe";
 import {DefaultValuePipe} from "../../_pipes/default-value.pipe";
 import {TranslocoLocaleModule} from "@jsverse/transloco-locale";
 import {UtcToLocalTimePipe} from "../../_pipes/utc-to-local-time.pipe";
 import {DefaultModalOptions} from "../../_models/default-modal-options";
 import {ColumnMode, NgxDatatableModule} from "@siemens/ngx-datatable";
-import {DevicePlatformPipe} from "../../_pipes/device-platform.pipe";
 
 @Component({
-  selector: 'app-manage-scrobble-errors',
-  standalone: true,
-  imports: [ReactiveFormsModule, FilterPipe, LoadingComponent, SortableHeader, TranslocoModule, DefaultDatePipe, DefaultValuePipe, TranslocoLocaleModule, UtcToLocalTimePipe, DevicePlatformPipe, NgxDatatableModule],
-  templateUrl: './manage-scrobble-errors.component.html',
-  styleUrls: ['./manage-scrobble-errors.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-manage-scrobble-errors',
+  imports: [ReactiveFormsModule, FilterPipe, TranslocoModule, DefaultValuePipe, TranslocoLocaleModule, UtcToLocalTimePipe, NgxDatatableModule],
+    templateUrl: './manage-scrobble-errors.component.html',
+    styleUrls: ['./manage-scrobble-errors.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManageScrobbleErrorsComponent implements OnInit {
   @Output() scrobbleCount = new EventEmitter<number>();

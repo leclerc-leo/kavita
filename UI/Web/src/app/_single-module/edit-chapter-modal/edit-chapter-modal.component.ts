@@ -3,15 +3,12 @@ import {Breakpoint, UtilityService} from "../../shared/_services/utility.service
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
   AsyncPipe,
-  DatePipe,
-  DecimalPipe,
   NgClass,
   NgTemplateOutlet,
   TitleCasePipe
 } from "@angular/common";
 import {
   NgbActiveModal,
-  NgbInputDatepicker,
   NgbNav,
   NgbNavContent,
   NgbNavItem,
@@ -79,44 +76,37 @@ export interface EditChapterModalCloseResult {
 const blackList = [Action.Edit, Action.IncognitoRead, Action.AddToReadingList];
 
 @Component({
-  selector: 'app-edit-chapter-modal',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgbNav,
-    NgbNavContent,
-    NgbNavLink,
-    TranslocoDirective,
-    AsyncPipe,
-    NgbNavOutlet,
-    ReactiveFormsModule,
-    NgbNavItem,
-    SettingItemComponent,
-    NgTemplateOutlet,
-    NgClass,
-    TypeaheadComponent,
-    EntityTitleComponent,
-    TitleCasePipe,
-    SettingButtonComponent,
-    CoverImageChooserComponent,
-    EditChapterProgressComponent,
-    NgbInputDatepicker,
-    CompactNumberPipe,
-    IconAndTitleComponent,
-    DefaultDatePipe,
-    TranslocoDatePipe,
-    UtcToLocalTimePipe,
-    BytesPipe,
-    ImageComponent,
-    SafeHtmlPipe,
-    DecimalPipe,
-    DatePipe,
-    ReadTimePipe,
-    SettingTitleComponent
-  ],
-  templateUrl: './edit-chapter-modal.component.html',
-  styleUrl: './edit-chapter-modal.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-edit-chapter-modal',
+    imports: [
+        FormsModule,
+        NgbNav,
+        NgbNavContent,
+        NgbNavLink,
+        TranslocoDirective,
+        AsyncPipe,
+        NgbNavOutlet,
+        ReactiveFormsModule,
+        NgbNavItem,
+        SettingItemComponent,
+        NgTemplateOutlet,
+        NgClass,
+        TypeaheadComponent,
+        EntityTitleComponent,
+        TitleCasePipe,
+        SettingButtonComponent,
+        CoverImageChooserComponent,
+        EditChapterProgressComponent,
+        CompactNumberPipe,
+        DefaultDatePipe,
+        UtcToLocalTimePipe,
+        BytesPipe,
+        ImageComponent,
+        SafeHtmlPipe,
+        ReadTimePipe,
+    ],
+    templateUrl: './edit-chapter-modal.component.html',
+    styleUrl: './edit-chapter-modal.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditChapterModalComponent implements OnInit {
 

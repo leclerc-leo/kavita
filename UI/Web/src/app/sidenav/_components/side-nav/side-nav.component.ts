@@ -25,7 +25,6 @@ import {FilterPipe} from "../../../_pipes/filter.pipe";
 import {FormsModule} from "@angular/forms";
 import {TranslocoDirective} from "@jsverse/transloco";
 import {CardActionablesComponent} from "../../../_single-module/card-actionables/card-actionables.component";
-import {SentenceCasePipe} from "../../../_pipes/sentence-case.pipe";
 import {SideNavStream} from "../../../_models/sidenav/sidenav-stream";
 import {SideNavStreamType} from "../../../_models/sidenav/sidenav-stream-type.enum";
 import {WikiLink} from "../../../_models/wiki";
@@ -33,12 +32,11 @@ import {SettingsTabId} from "../../preference-nav/preference-nav.component";
 import {LicenseService} from "../../../_services/license.service";
 
 @Component({
-  selector: 'app-side-nav',
-  standalone: true,
-  imports: [SideNavItemComponent, CardActionablesComponent, FilterPipe, FormsModule, TranslocoDirective, SentenceCasePipe, NgbTooltip, NgClass, AsyncPipe],
-  templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-side-nav',
+    imports: [SideNavItemComponent, CardActionablesComponent, FilterPipe, FormsModule, TranslocoDirective, NgbTooltip, NgClass, AsyncPipe],
+    templateUrl: './side-nav.component.html',
+    styleUrls: ['./side-nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideNavComponent implements OnInit {
 

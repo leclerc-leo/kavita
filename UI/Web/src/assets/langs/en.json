@@ -1104,7 +1104,7 @@
         "type-label": "Type",
         "type-tooltip": "Library type determines how filenames are parsed and if the UI shows Chapters (Manga) vs Issues (Comics). Check the wiki for more details on the differences between the library types.",
         "kavitaplus-eligible-label": "Kavita+ Eligible",
-        "kavitaplus-eligible-tooltip": "Will Kavita+ pull information or support Scrobbling",
+        "kavitaplus-eligible-tooltip": "Supports Kavita+ metadata features or Scrobbling",
         "folder-description": "Add folders to your library",
         "browse": "Browse for Media Folders",
         "help-us-part-1": "Help us out by following ",
@@ -1893,7 +1893,7 @@
         "dry-run-step": "Dry Run",
         "final-import-step": "Final Step",
         "comicvine-parsing-label": "Use Comic Vine Series matching",
-        "cbl-repo": "You can find many reading lists in the community <a href='https://github.com/DieselTech/CBL-ReadingLists' target='_blank' rel='noopener noreferrer'>repo</a>."
+        "cbl-repo": "You can find many reading lists in the community <a href='https://github.com/DieselTech/CBL-ReadingLists' target='_blank' rel='noopener noreferrer'>repository</a>."
     },
 
     "pdf-reader": {
@@ -2366,7 +2366,8 @@
         "sidenav": "Side Nav",
         "external-sources": "External Sources",
         "smart-filters": "Smart Filters",
-        "help": "{{common.help}}"
+        "help": "{{common.help}}",
+        "description": "You can customize different aspects of Kavita by reordering, toggling visibility, and binding smart filters/external sources to your home page or side nav."
     },
 
     "customize-dashboard-streams": {

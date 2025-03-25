@@ -11,7 +11,7 @@ import {WikiLink} from "../../_models/wiki";
 import {SettingItemComponent} from "../../settings/_components/setting-item/setting-item.component";
 import {SettingSwitchComponent} from "../../settings/_components/setting-switch/setting-switch.component";
 import {ConfirmService} from "../../shared/confirm.service";
-import {debounceTime, distinctUntilChanged, filter, of, switchMap, tap} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {DefaultValuePipe} from "../../_pipes/default-value.pipe";
 import {EnterBlurDirective} from "../../_directives/enter-blur.directive";
@@ -19,12 +19,11 @@ import {EnterBlurDirective} from "../../_directives/enter-blur.directive";
 const ValidIpAddress = /^(\s*((([12]?\d{1,2}\.){3}[12]?\d{1,2})|(([\da-f]{0,4}\:){0,7}([\da-f]{0,4})))\s*\,)*\s*((([12]?\d{1,2}\.){3}[12]?\d{1,2})|(([\da-f]{0,4}\:){0,7}([\da-f]{0,4})))\s*$/i;
 
 @Component({
-  selector: 'app-manage-settings',
-  templateUrl: './manage-settings.component.html',
-  styleUrls: ['./manage-settings.component.scss'],
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TitleCasePipe, TranslocoModule, SettingItemComponent, SettingSwitchComponent, DefaultValuePipe, EnterBlurDirective]
+    selector: 'app-manage-settings',
+    templateUrl: './manage-settings.component.html',
+    styleUrls: ['./manage-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ReactiveFormsModule, TitleCasePipe, TranslocoModule, SettingItemComponent, SettingSwitchComponent, DefaultValuePipe, EnterBlurDirective]
 })
 export class ManageSettingsComponent implements OnInit {
 
@@ -134,6 +133,8 @@ export class ManageSettingsComponent implements OnInit {
     const modelSettings = this.settingsForm.value;
     modelSettings.bookmarksDirectory = this.serverSettings.bookmarksDirectory;
     modelSettings.smtpConfig = this.serverSettings.smtpConfig;
+    modelSettings.installId = this.serverSettings.installId;
+    modelSettings.installVersion = this.serverSettings.installVersion;
 
     return modelSettings;
   }
