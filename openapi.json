@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Kavita (v0.8.5.21)",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.5.21",
+    "title": "Kavita (v0.8.5.22)",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.5.22",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
@@ -2554,6 +2554,38 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Filter/rename": {
+      "post": {
+        "tags": [
+          "Filter"
+        ],
+        "summary": "Rename a Smart Filter given the filterId and new name",
+        "parameters": [
+          {
+            "name": "filterId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -13294,6 +13326,54 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Stream/smart-filter-side-nav-stream": {
+      "delete": {
+        "tags": [
+          "Stream"
+        ],
+        "summary": "Removes a Smart Filter from a user's SideNav Streams",
+        "parameters": [
+          {
+            "name": "sideNavStreamId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Stream/smart-filter-dashboard-stream": {
+      "delete": {
+        "tags": [
+          "Stream"
+        ],
+        "summary": "Removes a Smart Filter from a user's Dashboard Streams",
+        "parameters": [
+          {
+            "name": "dashboardStreamId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
