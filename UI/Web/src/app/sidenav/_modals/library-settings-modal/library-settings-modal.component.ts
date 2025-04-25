@@ -128,6 +128,11 @@ export class LibrarySettingsModalComponent implements OnInit {
     return libType === LibraryType.Manga || libType === LibraryType.LightNovel;
   }
 
+  get IsMetadataDownloadEligible() {
+    const libType = parseInt(this.libraryForm.get('type')?.value + '', 10) as LibraryType;
+    return libType === LibraryType.Manga || libType === LibraryType.LightNovel || libType === LibraryType.ComicVine;
+  }
+
   ngOnInit(): void {
     if (this.library === undefined) {
       this.isAddLibrary = true;
@@ -141,10 +146,18 @@ export class LibrarySettingsModalComponent implements OnInit {
 
     if (this.library && !(this.library.type === LibraryType.Manga || this.library.type === LibraryType.LightNovel) ) {
       this.libraryForm.get('allowScrobbling')?.setValue(false);
-      this.libraryForm.get('allowMetadataMatching')?.setValue(false);
       this.libraryForm.get('allowScrobbling')?.disable();
-      this.libraryForm.get('allowMetadataMatching')?.disable();
+
+      if (this.IsMetadataDownloadEligible) {
+        this.libraryForm.get('allowMetadataMatching')?.setValue(this.library.allowMetadataMatching);
+        this.libraryForm.get('allowMetadataMatching')?.enable();
+      } else {
+        this.libraryForm.get('allowMetadataMatching')?.setValue(false);
+        this.libraryForm.get('allowMetadataMatching')?.disable();
+      }
     }
+
+
 
     this.libraryForm.get('name')?.valueChanges.pipe(
       debounceTime(100),
@@ -208,11 +221,16 @@ export class LibrarySettingsModalComponent implements OnInit {
 
         if (!this.IsKavitaPlusEligible) {
           this.libraryForm.get('allowScrobbling')?.disable();
-          this.libraryForm.get('allowMetadataMatching')?.disable();
         } else {
           this.libraryForm.get('allowScrobbling')?.enable();
-          this.libraryForm.get('allowMetadataMatching')?.enable();
         }
+
+        if (this.IsMetadataDownloadEligible) {
+          this.libraryForm.get('allowMetadataMatching')?.enable();
+        } else {
+          this.libraryForm.get('allowMetadataMatching')?.disable();
+        }
+
         this.cdRef.markForCheck();
       }),
       takeUntilDestroyed(this.destroyRef)
@@ -231,7 +249,7 @@ export class LibrarySettingsModalComponent implements OnInit {
       this.libraryForm.get('manageReadingLists')?.setValue(this.library.manageReadingLists);
       this.libraryForm.get('collapseSeriesRelationships')?.setValue(this.library.collapseSeriesRelationships);
       this.libraryForm.get('allowScrobbling')?.setValue(this.IsKavitaPlusEligible ? this.library.allowScrobbling : false);
-      this.libraryForm.get('allowMetadataMatching')?.setValue(this.IsKavitaPlusEligible ? this.library.allowMetadataMatching : false);
+      this.libraryForm.get('allowMetadataMatching')?.setValue(this.IsMetadataDownloadEligible ? this.library.allowMetadataMatching : false);
       this.selectedFolders = this.library.folders;
 
       this.madeChanges = false;

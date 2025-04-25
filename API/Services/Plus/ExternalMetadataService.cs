@@ -50,7 +50,7 @@ public interface IExternalMetadataService
 
     Task<IList<MalStackDto>> GetStacksForUser(int userId);
     Task<IList<ExternalSeriesMatchDto>> MatchSeries(MatchSeriesDto dto);
-    Task FixSeriesMatch(int seriesId, int anilistId, long? malId);
+    Task FixSeriesMatch(int seriesId, int? aniListId, long? malId, int? cbrId);
     Task UpdateSeriesDontMatch(int seriesId, bool dontMatch);
     Task<bool> WriteExternalMetadataToSeries(ExternalSeriesDetailDto externalMetadata, int seriesId);
 }
@@ -66,7 +66,7 @@ public class ExternalMetadataService : IExternalMetadataService
     private readonly ICoverDbService _coverDbService;
     private readonly TimeSpan _externalSeriesMetadataCache = TimeSpan.FromDays(30);
     public static readonly HashSet<LibraryType> NonEligibleLibraryTypes =
-        [LibraryType.Comic, LibraryType.Book, LibraryType.Image, LibraryType.ComicVine];
+        [LibraryType.Comic, LibraryType.Book, LibraryType.Image];
     private readonly SeriesDetailPlusDto _defaultReturn = new()
     {
         Series =  null,
@@ -203,7 +203,7 @@ public class ExternalMetadataService : IExternalMetadataService
     {
         var license = (await _unitOfWork.SettingsRepository.GetSettingAsync(ServerSettingKey.LicenseKey)).Value;
         var series = await _unitOfWork.SeriesRepository.GetSeriesByIdAsync(dto.SeriesId,
-            SeriesIncludes.Metadata | SeriesIncludes.ExternalMetadata);
+            SeriesIncludes.Metadata | SeriesIncludes.ExternalMetadata | SeriesIncludes.Library);
         if (series == null) return [];
 
         var potentialAnilistId = ScrobblingService.ExtractId<int?>(dto.Query, ScrobblingService.AniListWeblinkWebsite);
@@ -217,7 +217,7 @@ public class ExternalMetadataService : IExternalMetadataService
 
         var matchRequest = new MatchSeriesRequestDto()
         {
-            Format = series.Format == MangaFormat.Epub ? PlusMediaFormat.LightNovel : PlusMediaFormat.Manga,
+            Format = series.Library.Type.ConvertToPlusMediaFormat(series.Format),
             Query = dto.Query,
             SeriesName = series.Name,
             AlternativeNames = altNames.Where(s => !string.IsNullOrEmpty(s)).ToList(),
@@ -319,8 +319,10 @@ public class ExternalMetadataService : IExternalMetadataService
     /// This will override any sort of matching that was done prior and force it to be what the user Selected
     /// </summary>
     /// <param name="seriesId"></param>
-    /// <param name="anilistId"></param>
-    public async Task FixSeriesMatch(int seriesId, int anilistId, long? malId)
+    /// <param name="aniListId"></param>
+    /// <param name="malId"></param>
+    /// <param name="cbrId"></param>
+    public async Task FixSeriesMatch(int seriesId, int? aniListId, long? malId, int? cbrId)
     {
         var series = await _unitOfWork.SeriesRepository.GetSeriesByIdAsync(seriesId, SeriesIncludes.Library);
         if (series == null) return;
@@ -336,15 +338,17 @@ public class ExternalMetadataService : IExternalMetadataService
             var metadata = await FetchExternalMetadataForSeries(seriesId, series.Library.Type,
                 new PlusSeriesRequestDto()
                 {
-                    AniListId = anilistId,
+                    AniListId = aniListId,
                     MalId = malId,
+                    CbrId = cbrId,
+                    MediaFormat = series.Library.Type.ConvertToPlusMediaFormat(series.Format),
                     SeriesName = series.Name // Required field, not used since AniList/Mal Id are passed
                 });
 
             if (metadata.Series == null)
             {
-                _logger.LogError("Unable to Match {SeriesName} with Kavita+ Series AniList Id: {AniListId}",
-                    series.Name, anilistId);
+                _logger.LogError("Unable to Match {SeriesName} with Kavita+ Series with Id: {AniListId}/{MalId}/{CbrId}",
+                    series.Name, aniListId, malId, cbrId);
                 return;
             }
 
@@ -428,8 +432,7 @@ public class ExternalMetadataService : IExternalMetadataService
                 result = await (Configuration.KavitaPlusApiUrl + "/api/metadata/v2/series-detail")
                     .WithKavitaPlusHeaders(license, token)
                     .PostJsonAsync(data)
-                    .ReceiveJson<
-                        SeriesDetailPlusApiDto>(); // This returns an AniListSeries and Match returns ExternalSeriesDto
+                    .ReceiveJson<SeriesDetailPlusApiDto>(); // This returns an AniListSeries and Match returns ExternalSeriesDto
             }
             catch (FlurlHttpException ex)
             {
@@ -482,6 +485,7 @@ public class ExternalMetadataService : IExternalMetadataService
             {
                 var rating = _mapper.Map<ExternalRating>(r);
                 rating.SeriesId = externalSeriesMetadata.SeriesId;
+                rating.ProviderUrl = r.ProviderUrl;
                 return rating;
             }).ToList();
 
@@ -500,6 +504,7 @@ public class ExternalMetadataService : IExternalMetadataService
 
             if (result.MalId.HasValue) externalSeriesMetadata.MalId = result.MalId.Value;
             if (result.AniListId.HasValue) externalSeriesMetadata.AniListId = result.AniListId.Value;
+            if (result.CbrId.HasValue) externalSeriesMetadata.CbrId = result.CbrId.Value;
 
             // If there is metadata and the user has metadata download turned on
             var madeMetadataModification = false;
@@ -621,6 +626,8 @@ public class ExternalMetadataService : IExternalMetadataService
 
         madeModification = await UpdateRelationships(series, settings, externalMetadata.Relations, defaultAdmin) || madeModification;
         madeModification = await UpdateCoverImage(series, settings, externalMetadata) || madeModification;
+
+        madeModification = await UpdateChapters(series, settings, externalMetadata) || madeModification;
 
         return madeModification;
     }
@@ -848,7 +855,6 @@ public class ExternalMetadataService : IExternalMetadataService
             }
         }
 
-        // Download the image and save it
         _unitOfWork.SeriesRepository.Update(series);
         await _unitOfWork.CommitAsync();
 
@@ -1044,6 +1050,199 @@ public class ExternalMetadataService : IExternalMetadataService
         return false;
     }
 
+
+    private async Task<bool> UpdateChapters(Series series, MetadataSettingsDto settings,
+        ExternalSeriesDetailDto externalMetadata)
+    {
+        if (externalMetadata.PlusMediaFormat != PlusMediaFormat.Comic) return false;
+
+        if (externalMetadata.ChapterDtos == null || externalMetadata.ChapterDtos.Count == 0) return false;
+
+        // Get all volumes and chapters
+        var madeModification = false;
+        var allChapters =  await _unitOfWork.ChapterRepository.GetAllChaptersForSeries(series.Id);
+
+        var matchedChapters = allChapters
+            .Join(
+                externalMetadata.ChapterDtos,
+                chapter => chapter.Range,
+                dto => dto.IssueNumber,
+                (chapter, dto) => (chapter, dto) // Create a tuple of matched pairs
+            )
+            .ToList();
+
+        foreach (var (chapter, potentialMatch) in matchedChapters)
+        {
+            _logger.LogDebug("Updating {ChapterNumber} with metadata", chapter.Range);
+
+            // Write the metadata
+            madeModification = UpdateChapterTitle(chapter, settings, potentialMatch.Title, series.Name) || madeModification;
+            madeModification = UpdateChapterSummary(chapter, settings, potentialMatch.Summary) || madeModification;
+            madeModification = UpdateChapterReleaseDate(chapter, settings, potentialMatch.ReleaseDate) || madeModification;
+            madeModification = await UpdateChapterPublisher(chapter, settings, potentialMatch.Publisher) || madeModification;
+
+            madeModification = await UpdateChapterPeople(chapter, settings, PersonRole.CoverArtist, potentialMatch.Artists) || madeModification;
+            madeModification = await UpdateChapterPeople(chapter, settings, PersonRole.Writer, potentialMatch.Writers) || madeModification;
+
+            madeModification = await UpdateChapterCoverImage(chapter, settings, potentialMatch.CoverImageUrl) || madeModification;
+
+            _unitOfWork.ChapterRepository.Update(chapter);
+            await _unitOfWork.CommitAsync();
+        }
+
+
+        return madeModification;
+    }
+
+
+    private static bool UpdateChapterSummary(Chapter chapter, MetadataSettingsDto settings, string? summary)
+    {
+        if (!settings.EnableChapterSummary) return false;
+
+        if (string.IsNullOrEmpty(summary)) return false;
+
+        if (chapter.SummaryLocked && !settings.HasOverride(MetadataSettingField.ChapterSummary))
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(summary) && !settings.HasOverride(MetadataSettingField.ChapterSummary))
+        {
+            return false;
+        }
+
+        chapter.Summary = StringHelper.RemoveSourceInDescription(StringHelper.SquashBreaklines(summary));
+        return true;
+    }
+
+    private static bool UpdateChapterTitle(Chapter chapter, MetadataSettingsDto settings, string? title, string seriesName)
+    {
+        if (!settings.EnableChapterTitle) return false;
+
+        if (string.IsNullOrEmpty(title)) return false;
+
+        if (chapter.TitleNameLocked && !settings.HasOverride(MetadataSettingField.ChapterTitle))
+        {
+            return false;
+        }
+
+        if (!title.Contains(seriesName) && !settings.HasOverride(MetadataSettingField.ChapterTitle))
+        {
+            return false;
+        }
+
+        chapter.TitleName = title;
+        return true;
+    }
+
+    private static bool UpdateChapterReleaseDate(Chapter chapter, MetadataSettingsDto settings, DateTime? releaseDate)
+    {
+        if (!settings.EnableChapterReleaseDate) return false;
+
+        if (releaseDate == null || releaseDate == DateTime.MinValue) return false;
+
+        if (chapter.ReleaseDateLocked && !settings.HasOverride(MetadataSettingField.ChapterReleaseDate))
+        {
+            return false;
+        }
+
+        if (!settings.HasOverride(MetadataSettingField.ChapterReleaseDate))
+        {
+            return false;
+        }
+
+        chapter.ReleaseDate = releaseDate.Value;
+        return true;
+    }
+
+    private async Task<bool> UpdateChapterPublisher(Chapter chapter, MetadataSettingsDto settings, string? publisher)
+    {
+        if (!settings.EnableChapterPublisher) return false;
+
+        if (string.IsNullOrEmpty(publisher)) return false;
+
+        if (chapter.PublisherLocked && !settings.HasOverride(MetadataSettingField.ChapterPublisher))
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(publisher) && !settings.HasOverride(MetadataSettingField.ChapterPublisher))
+        {
+            return false;
+        }
+
+        return await UpdateChapterPeople(chapter, settings, PersonRole.Publisher, [publisher]);
+    }
+
+    private async Task<bool> UpdateChapterCoverImage(Chapter chapter, MetadataSettingsDto settings, string? coverUrl)
+    {
+        if (!settings.EnableChapterCoverImage) return false;
+
+        if (string.IsNullOrEmpty(coverUrl)) return false;
+
+        if (chapter.CoverImageLocked && !settings.HasOverride(MetadataSettingField.ChapterCovers))
+        {
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(coverUrl))
+        {
+            return false;
+        }
+
+        await DownloadChapterCovers(chapter, coverUrl);
+        return true;
+    }
+
+    private async Task<bool> UpdateChapterPeople(Chapter chapter, MetadataSettingsDto settings, PersonRole role, IList<string>? staff)
+    {
+        if (!settings.EnablePeople) return false;
+
+        if (staff?.Count == 0) return false;
+
+        if (chapter.IsPersonRoleLocked(role) && !settings.HasOverride(MetadataSettingField.People))
+        {
+            return false;
+        }
+
+        if (!settings.IsPersonAllowed(role) && role != PersonRole.Publisher)
+        {
+            return false;
+        }
+
+        chapter.People ??= [];
+        var people = staff!
+            .Select(w => new PersonDto()
+            {
+                Name = w,
+            })
+            .Concat(chapter.People
+                .Where(p => p.Role == role)
+                .Where(p => !p.KavitaPlusConnection)
+                .Select(p => _mapper.Map<PersonDto>(p.Person))
+            )
+            .DistinctBy(p => Parser.Normalize(p.Name))
+            .ToList();
+
+        await PersonHelper.UpdateChapterPeopleAsync(chapter, staff, role, _unitOfWork);
+
+        foreach (var person in chapter.People.Where(p => p.Role == role))
+        {
+            var meta = people.FirstOrDefault(c => c.Name == person.Person.Name);
+            person.OrderWeight = 0;
+
+            if (meta != null)
+            {
+                person.KavitaPlusConnection = true;
+            }
+        }
+
+        _unitOfWork.ChapterRepository.Update(chapter);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
     private async Task<bool> UpdateCoverImage(Series series, MetadataSettingsDto settings, ExternalSeriesDetailDto externalMetadata)
     {
         if (!settings.EnableCoverImage) return false;
@@ -1163,6 +1362,18 @@ public class ExternalMetadataService : IExternalMetadataService
         catch (Exception ex)
         {
             _logger.LogError(ex, "There was an exception downloading cover image for Series {SeriesName} ({SeriesId})", series.Name, series.Id);
+        }
+    }
+
+    private async Task DownloadChapterCovers(Chapter chapter, string coverUrl)
+    {
+        try
+        {
+            await _coverDbService.SetChapterCoverByUrl(chapter, coverUrl, false, true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "There was an exception downloading cover image for Chapter {ChapterName} ({SeriesId})", chapter.Range, chapter.Id);
         }
     }
 

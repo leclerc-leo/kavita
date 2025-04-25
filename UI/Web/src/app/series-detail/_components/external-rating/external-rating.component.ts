@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, DestroyRef,
+  Component,
+  DestroyRef,
   inject,
   Input,
   OnInit,
@@ -13,7 +14,6 @@ import {ProviderImagePipe} from "../../../_pipes/provider-image.pipe";
 import {NgbModal, NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {LoadingComponent} from "../../../shared/loading/loading.component";
 import {LibraryType} from "../../../_models/library/library";
-import {ProviderNamePipe} from "../../../_pipes/provider-name.pipe";
 import {NgxStarsModule} from "ngx-stars";
 import {ThemeService} from "../../../_services/theme.service";
 import {Breakpoint, UtilityService} from "../../../shared/_services/utility.service";
@@ -23,15 +23,16 @@ import {SafeHtmlPipe} from "../../../_pipes/safe-html.pipe";
 import {ImageService} from "../../../_services/image.service";
 import {AsyncPipe, NgOptimizedImage, NgTemplateOutlet} from "@angular/common";
 import {RatingModalComponent} from "../rating-modal/rating-modal.component";
+import {ScrobbleProviderNamePipe} from "../../../_pipes/scrobble-provider-name.pipe";
 
 @Component({
-    selector: 'app-external-rating',
-    imports: [ProviderImagePipe, NgbPopover, LoadingComponent, ProviderNamePipe, NgxStarsModule, ImageComponent,
-        TranslocoDirective, SafeHtmlPipe, NgOptimizedImage, AsyncPipe, NgTemplateOutlet],
-    templateUrl: './external-rating.component.html',
-    styleUrls: ['./external-rating.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-external-rating',
+  imports: [ProviderImagePipe, NgbPopover, LoadingComponent, NgxStarsModule, ImageComponent,
+    TranslocoDirective, SafeHtmlPipe, NgOptimizedImage, AsyncPipe, NgTemplateOutlet, ScrobbleProviderNamePipe],
+  templateUrl: './external-rating.component.html',
+  styleUrls: ['./external-rating.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ExternalRatingComponent implements OnInit {
 
