@@ -226,7 +226,7 @@ public class ExternalMetadataService : IExternalMetadataService
             AlternativeNames = altNames.Where(s => !string.IsNullOrEmpty(s)).ToList(),
             Year = series.Metadata.ReleaseYear,
             AniListId = potentialAnilistId ?? ScrobblingService.GetAniListId(series),
-            MalId = potentialMalId ?? ScrobblingService.GetMalId(series),
+            MalId = potentialMalId ?? ScrobblingService.GetMalId(series)
         };
 
         var token = (await _unitOfWork.UserRepository.GetDefaultAdminUser()).AniListAccessToken;
@@ -792,7 +792,7 @@ public class ExternalMetadataService : IExternalMetadataService
         var characters = externalCharacters
             .Select(w => new PersonDto()
             {
-                Name = w.Name,
+                Name = w.Name.Trim(),
                 AniListId = ScrobblingService.ExtractId<int>(w.Url, ScrobblingService.AniListCharacterWebsite),
                 Description = StringHelper.CorrectUrls(StringHelper.RemoveSourceInDescription(StringHelper.SquashBreaklines(w.Description))),
             })
@@ -873,7 +873,7 @@ public class ExternalMetadataService : IExternalMetadataService
         var artists = upstreamArtists
             .Select(w => new PersonDto()
             {
-                Name = w.Name,
+                Name = w.Name.Trim(),
                 AniListId = ScrobblingService.ExtractId<int>(w.Url, ScrobblingService.AniListStaffWebsite),
                 Description = StringHelper.CorrectUrls(StringHelper.RemoveSourceInDescription(StringHelper.SquashBreaklines(w.Description))),
             })
@@ -929,7 +929,7 @@ public class ExternalMetadataService : IExternalMetadataService
         var writers = upstreamWriters
             .Select(w => new PersonDto()
             {
-                Name = w.Name,
+                Name = w.Name.Trim(),
                 AniListId = ScrobblingService.ExtractId<int>(w.Url, ScrobblingService.AniListStaffWebsite),
                 Description = StringHelper.CorrectUrls(StringHelper.RemoveSourceInDescription(StringHelper.SquashBreaklines(w.Description))),
             })
@@ -1353,7 +1353,7 @@ public class ExternalMetadataService : IExternalMetadataService
         var people = staff!
             .Select(w => new PersonDto()
             {
-                Name = w,
+                Name = w.Trim(),
             })
             .Concat(chapter.People
                 .Where(p => p.Role == role)
