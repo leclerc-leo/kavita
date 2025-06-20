@@ -76,6 +76,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ISettingsService, SettingsService>();
 
 
+        services.AddScoped<IKavitaPlusApiService, KavitaPlusApiService>();
         services.AddScoped<IScrobblingService, ScrobblingService>();
         services.AddScoped<ILicenseService, LicenseService>();
         services.AddScoped<IExternalMetadataService, ExternalMetadataService>();
