@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.6.18",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.6.19",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.6.18"
+    "version": "0.8.6.19"
   },
   "servers": [
     {
@@ -18338,6 +18338,32 @@
             "type": "string",
             "nullable": true
           },
+          "kPlusOverrides": {
+            "type": "array",
+            "items": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14
+              ],
+              "type": "integer",
+              "description": "Represents which field that can be written to as an override when already locked",
+              "format": "int32"
+            },
+            "description": "Tracks which metadata has been set by K+",
+            "nullable": true
+          },
           "averageExternalRating": {
             "type": "number",
             "description": "(Kavita+) Average rating from Kavita+ metadata",
@@ -24429,6 +24455,32 @@
           "webLinks": {
             "type": "string",
             "description": "A Comma-separated list of strings representing links from the series",
+            "nullable": true
+          },
+          "kPlusOverrides": {
+            "type": "array",
+            "items": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14
+              ],
+              "type": "integer",
+              "description": "Represents which field that can be written to as an override when already locked",
+              "format": "int32"
+            },
+            "description": "Tracks which metadata has been set by K+",
             "nullable": true
           },
           "languageLocked": {
