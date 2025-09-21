@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.16",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.17",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.7.16"
+    "version": "0.8.7.17"
   },
   "servers": [
     {
@@ -18565,6 +18565,15 @@
             "type": "boolean",
             "description": "Book Reader Option: A flag that hides the menu-ing system behind a click on the screen. This should be used with tap to paginate, but the app doesn't enforce this."
           },
+          "bookReaderEpubPageCalculationMethod": {
+            "enum": [
+              0,
+              1
+            ],
+            "type": "integer",
+            "description": "Book Reader Option: Different calculation modes for the page due to a bleed bug that devs cannot reproduce reliably or fix",
+            "format": "int32"
+          },
           "pdfTheme": {
             "enum": [
               0,
@@ -29006,6 +29015,7 @@
           "allowAutomaticWebtoonReaderDetection",
           "autoCloseMenu",
           "backgroundColor",
+          "bookReaderEpubPageCalculationMethod",
           "bookReaderFontFamily",
           "bookReaderFontSize",
           "bookReaderImmersiveMode",
@@ -29182,6 +29192,15 @@
           },
           "bookReaderImmersiveMode": {
             "type": "boolean"
+          },
+          "bookReaderEpubPageCalculationMethod": {
+            "enum": [
+              0,
+              1
+            ],
+            "type": "integer",
+            "description": "Due to a bleeding text bug in the Epub reader with 1/2 column layout, multiple calculation modes are present",
+            "format": "int32"
           },
           "pdfTheme": {
             "enum": [
