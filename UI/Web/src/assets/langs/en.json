@@ -48,7 +48,7 @@
         "provider-name-tooltip": "Name shown on the login screen",
 
         "defaults-title": "Defaults",
-        "defaults-requirement": "The following settings are used when a user is registered via OIDC while SyncUserSettings is turned off",
+        "defaults-requirement": "The following settings are used when a user is registered via OIDC while Sync User Settings is turned off",
         "default-include-unknowns-label": "Include unknowns",
         "default-include-unknowns-tooltip": "Include unknown age ratings",
         "default-age-restriction-label": "Age rating",
@@ -815,6 +815,7 @@
         "faq-title": "FAQ",
         "total-subbed-months-label": "Total Months Subscribed",
         "email-label": "Registered Email",
+        "supportId-label": "Support Id",
 
         "license-mismatch": "License may be registered to another Kavita instance. Re-register to fix.",
         "k+-license-overwrite": "License is registered to another Kavita instance. This can happen on re-installation and rarely due to system updates. Select overwrite to force this instance to register with Kavita+.",
@@ -2180,7 +2181,7 @@
         "next": "{{import-cbl-modal.next}}",
         "save": "{{common.save}}",
 
-        "import-description": "Upload a file you, or someone else has exported to replace or merge with your current settings.",
+        "import-description": "Upload a file you, or someone else, has exported to replace or merge with your current settings.",
         "select-files-warning": "You must upload a json file to continue",
         "invalid-file": "Failed to parse your file, check your input",
         "file-no-valid-content": "Your import did not contain any meaningful data to continue with",
