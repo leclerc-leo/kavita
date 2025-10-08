@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.19",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.20",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.7.19"
+    "version": "0.8.7.20"
   },
   "servers": [
     {
@@ -23656,6 +23656,11 @@
           "hasLicense": {
             "type": "boolean",
             "description": "A license is stored within Kavita"
+          },
+          "installId": {
+            "type": "string",
+            "description": "InstallId which can be given to support",
+            "nullable": true
           }
         },
         "additionalProperties": false
