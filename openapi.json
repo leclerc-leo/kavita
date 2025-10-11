@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.20",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.7.21",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.7.20"
+    "version": "0.8.7.21"
   },
   "servers": [
     {
@@ -18787,6 +18787,10 @@
             "type": "boolean",
             "description": "UI Site Global Setting: Should Kavita render ColorScape gradients"
           },
+          "dataSaver": {
+            "type": "boolean",
+            "description": "Enable data saver mode across Kavita, limiting information that is pre-fetched"
+          },
           "aniListScrobblingEnabled": {
             "type": "boolean",
             "description": "Should this account have Scrobbling enabled for AniList"
@@ -25355,6 +25359,10 @@
             "type": "string",
             "nullable": true
           },
+          "seriesSortName": {
+            "type": "string",
+            "nullable": true
+          },
           "seriesFormat": {
             "enum": [
               0,
@@ -29563,6 +29571,7 @@
           "bookReaderHighlightSlots",
           "collapseSeriesRelationships",
           "colorScapeEnabled",
+          "dataSaver",
           "locale",
           "noTransitions",
           "promptForDownloadSize",
@@ -29598,6 +29607,9 @@
             "type": "string"
           },
           "colorScapeEnabled": {
+            "type": "boolean"
+          },
+          "dataSaver": {
             "type": "boolean"
           },
           "aniListScrobblingEnabled": {
