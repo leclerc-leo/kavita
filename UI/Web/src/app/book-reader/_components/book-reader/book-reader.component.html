@@ -41,7 +41,7 @@
             (mousedown)="mouseDown($event)" >
 
         <div #readingHtml class="book-content {{layoutMode() | columnLayoutClass}} {{writingStyle() | writingStyleClass}}"
-             [ngStyle]="{'max-height': columnHeight(), 'max-width': verticalBookContentWidth(), 'width': verticalBookContentWidth(), 'column-width': columnWidth()}"
+             [ngStyle]="{'max-height': columnHeight(), 'max-width': verticalBookContentWidth(), 'width': verticalBookContentWidth(), 'column-width': columnWidth(), 'padding-bottom': bookContentPaddingBottom()}"
              [ngClass]="{'immersive': immersiveMode() && actionBarVisible, 'debug': debugMode()}"
              [innerHtml]="page()" (click)="toggleMenu($event)" (mousedown)="mouseDown($event)" (wheel)="onWheel($event)"></div>
 
@@ -87,7 +87,7 @@
 
             <div class="d-flex align-items-center right-group">
               @if (!this.adhocPageHistory.isEmpty()) {
-                <button class="btn btn-outline-secondary btn-icon me-1" (click)="goBack()" [title]="t('go-back')">
+                <button class="btn btn-secondary btn-icon me-1" (click)="goBack()" [title]="t('go-back')">
                   <i class="fa fa-reply" aria-hidden="true"></i>
                 </button>
               }
@@ -107,7 +107,7 @@
               <button class="btn btn-secondary btn-icon me-1" (click)="viewAnnotations()">
                 <i class="fa-solid fa-highlighter" aria-hidden="true"></i>
               </button>
-              <button class="btn btn-secondary btn-icon" (click)="viewToCDrawer()">
+              <button class="btn btn-secondary btn-icon me-1" (click)="viewToCDrawer()">
                 <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
               </button>
               <button class="btn btn-secondary btn-icon me-1" (click)="closeReader()">

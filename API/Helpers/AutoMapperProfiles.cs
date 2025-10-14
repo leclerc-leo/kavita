@@ -394,12 +394,14 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.OwnerUsername, opt => opt.MapFrom(src => src.AppUser.UserName))
             .ForMember(dest => dest.OwnerUserId, opt => opt.MapFrom(src => src.AppUserId))
             .ForMember(dest => dest.SeriesName, opt => opt.MapFrom(src => src.Series.Name))
-            .ForMember(dest => dest.LibraryName, opt => opt.MapFrom(src => src.Library.Name));
+            .ForMember(dest => dest.LibraryName, opt => opt.MapFrom(src => src.Library.Name))
+            .ForMember(dest => dest.AgeRating, opt => opt.MapFrom(src => src.Series.Metadata.AgeRating));
 
         CreateMap<AppUserAnnotation, FullAnnotationDto>()
             .ForMember(dest => dest.SeriesName, opt => opt.MapFrom(src => src.Series.Name))
             .ForMember(dest => dest.VolumeName, opt => opt.MapFrom(src => src.Chapter.Volume.Name))
-            .ForMember(dest => dest.LibraryName, opt => opt.MapFrom(src => src.Library.Name));
+            .ForMember(dest => dest.LibraryName, opt => opt.MapFrom(src => src.Library.Name))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.AppUserId));
 
         CreateMap<OidcConfigDto, OidcPublicConfigDto>();
     }
