@@ -7273,30 +7273,31 @@
       }
     },
     "/api/Person/valid-alias": {
-      "get": {
+      "post": {
         "tags": [
           "Person"
         ],
         "summary": "Ensure the alias is valid to be added. For example, the alias cannot be on another person or be the same as the current person name/alias.",
-        "parameters": [
-          {
-            "name": "personId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "alias",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "description": "alias check request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonAliasCheckDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonAliasCheckDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonAliasCheckDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -19837,6 +19838,39 @@
             "description": "https://hardcover.app/authors/{HardcoverId}",
             "nullable": true
           },
+          "webLinks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Web links derived from the various id of external websites",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "All roles as if returned by the /api/person/roles endpoint",
+            "nullable": true
+          },
           "seriesCount": {
             "type": "integer",
             "description": "Number of Series this Person is the Writer for",
@@ -23418,6 +23452,10 @@
             "type": "boolean",
             "description": "Should Kavita remove sort articles \"The\" for the sort name"
           },
+          "inheritWebLinksFromFirstChapter": {
+            "type": "boolean",
+            "description": "Should series inherit web links from the first chapter/volume"
+          },
           "created": {
             "type": "string",
             "format": "date-time"
@@ -23584,6 +23622,9 @@
           "removePrefixForSortName": {
             "type": "boolean",
             "description": "Should Kavita remove sort articles \"The\" for the sort name"
+          },
+          "inheritWebLinksFromFirstChapter": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -24680,6 +24721,32 @@
         },
         "additionalProperties": false
       },
+      "PersonAliasCheckDto": {
+        "required": [
+          "alias",
+          "name",
+          "personId"
+        ],
+        "type": "object",
+        "properties": {
+          "personId": {
+            "type": "integer",
+            "description": "The person to check against",
+            "format": "int32"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The persons name in the form. In case it differs from the one in the database"
+          },
+          "alias": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The alias to check"
+          }
+        },
+        "additionalProperties": false
+      },
       "PersonDto": {
         "required": [
           "name"
@@ -24738,6 +24805,39 @@
           "hardcoverId": {
             "type": "string",
             "description": "https://hardcover.app/authors/{HardcoverId}",
+            "nullable": true
+          },
+          "webLinks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Web links derived from the various id of external websites",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "All roles as if returned by the /api/person/roles endpoint",
             "nullable": true
           }
         },
@@ -28691,6 +28791,7 @@
           "id",
           "includeInDashboard",
           "includeInSearch",
+          "inheritWebLinksFromFirstChapter",
           "manageCollections",
           "manageReadingLists",
           "name",
@@ -28750,6 +28851,9 @@
             "type": "boolean"
           },
           "removePrefixForSortName": {
+            "type": "boolean"
+          },
+          "inheritWebLinksFromFirstChapter": {
             "type": "boolean"
           },
           "fileGroupTypes": {
