@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using API.Data;
 using API.Entities.Enums;
@@ -212,54 +211,16 @@ public class AppUserPreferences
     /// <remarks>Saved as a JSON obj in the DB</remarks>
     public AppUserSocialPreferences SocialPreferences { get; set; } = new();
 
+    /// <summary>
+    /// The opds preferences of the AppUser
+    /// </summary>
+    /// <remarks>Saved as a JSON obj in the DB</remarks>
+    public AppUserOpdsPreferences OpdsPreferences { get; set; } = new();
+
 
 
     #endregion
 
     public AppUser AppUser { get; set; } = null!;
     public int AppUserId { get; set; }
-}
-
-public class AppUserSocialPreferences
-{
-    /// <summary>
-    /// UI Site Global Setting: Should series reviews be shared with all users in the server
-    /// </summary>
-    public bool ShareReviews { get; set; } = false;
-
-    /// <summary>
-    /// UI Site Global Setting: Share your annotations with other users
-    /// </summary>
-    public bool ShareAnnotations { get; set; } = false;
-
-    /// <summary>
-    /// UI Site Global Setting: See other users' annotations while reading
-    /// </summary>
-    public bool ViewOtherAnnotations { get; set; } = false;
-
-    /// <summary>
-    /// UI Site Global Setting: For which libraries should social features be enabled
-    /// </summary>
-    /// <remarks>Empty array means all, disable specific social features to opt out everywhere</remarks>
-    public IList<int> SocialLibraries { get; set; } = [];
-
-    /// <summary>
-    /// UI Site Global Setting: Highest age rating for which social features are enabled
-    /// </summary>
-    public AgeRating SocialMaxAgeRating { get; set; } = AgeRating.NotApplicable;
-
-    /// <summary>
-    /// UI Site Global Setting: Enable social features for unknown age ratings
-    /// </summary>
-    public bool SocialIncludeUnknowns { get; set; } = true;
-}
-
-public sealed record KeyBind
-{
-    public string Key { get; set; }
-    public bool Control { get; set; }
-    public bool Shift { get; set; }
-    public bool Meta { get; set; }
-    public bool Alt { get; set; }
-    public IList<string>? ControllerSequence { get; set; }
 }
