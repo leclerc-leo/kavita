@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.8.17",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.8.18",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.8.17"
+    "version": "0.8.8.18"
   },
   "servers": [
     {
@@ -11453,13 +11453,23 @@
         }
       }
     },
-    "/api/reading-profile/{seriesId}": {
+    "/api/reading-profile/{libraryId}/{seriesId}": {
       "get": {
         "tags": [
           "ReadingProfile"
         ],
         "summary": "Returns the ReadingProfile that should be applied to the given series, walks up the tree.\nSeries -> Library -> Default",
         "parameters": [
+          {
+            "name": "libraryId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           {
             "name": "seriesId",
             "in": "path",
@@ -11477,8 +11487,145 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "deviceId",
+            "in": "query",
+            "description": "Defaults to currently active device",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reading-profile/series": {
+      "get": {
+        "tags": [
+          "ReadingProfile"
+        ],
+        "summary": "Returns all Reading Profiles bound to a series",
+        "parameters": [
+          {
+            "name": "seriesId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ReadingProfile"
+        ],
+        "summary": "Update the implicit reading profile for a series, creates one if none exists",
+        "description": "Any modification to the reader settings during reading will create an implicit profile. Use \"update-parent\" to save to the bound series profile.",
+        "parameters": [
+          {
+            "name": "libraryId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "seriesId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "query",
+            "description": "Defaults to currently active device",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserReadingProfileDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserReadingProfileDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserReadingProfileDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -11508,7 +11655,7 @@
         "tags": [
           "ReadingProfile"
         ],
-        "summary": "Returns the (potential) Reading Profile bound to the library",
+        "summary": "Returns all the Reading rofiles bound to the library",
         "parameters": [
           {
             "name": "libraryId",
@@ -11526,17 +11673,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReadingProfileDto"
+                  }
                 }
               }
             }
@@ -11609,70 +11765,17 @@
               "type": "integer",
               "format": "int32"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserReadingProfileDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/reading-profile/series": {
-      "post": {
-        "tags": [
-          "ReadingProfile"
-        ],
-        "summary": "Update the implicit reading profile for a series, creates one if none exists",
-        "description": "Any modification to the reader settings during reading will create an implicit profile. Use \"update-parent\" to save to the bound series profile.",
-        "parameters": [
+          },
           {
-            "name": "seriesId",
+            "name": "deviceId",
             "in": "query",
-            "description": "",
+            "description": "Defaults to currently active device",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           }
         ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserReadingProfileDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserReadingProfileDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserReadingProfileDto"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -11705,9 +11808,27 @@
         "summary": "Updates the non-implicit reading profile for the given series, and removes implicit profiles",
         "parameters": [
           {
+            "name": "libraryId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "seriesId",
             "in": "query",
             "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "query",
+            "description": "Defaults to currently active device",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -11847,17 +11968,40 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "profileId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -11904,17 +12048,40 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "profileId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -11951,6 +12118,39 @@
           "ReadingProfile"
         ],
         "summary": "Assigns the reading profile to all passes series, and deletes their implicit profiles",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkSetSeriesProfiles"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkSetSeriesProfiles"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkSetSeriesProfiles"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/reading-profile/set-devices": {
+      "post": {
+        "tags": [
+          "ReadingProfile"
+        ],
+        "summary": "Set the assigned devices for a reading profile",
         "parameters": [
           {
             "name": "profileId",
@@ -15810,6 +16010,18 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Settings/reset-external-ids": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -20589,6 +20801,28 @@
         },
         "additionalProperties": false
       },
+      "BulkSetSeriesProfiles": {
+        "type": "object",
+        "properties": {
+          "profileIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "seriesIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BulkUpdateSideNavStreamVisibilityDto": {
         "required": [
           "ids",
@@ -21340,6 +21574,10 @@
           "friendlyName": {
             "type": "string",
             "description": "User-friendly name, defaults to generated name like \"Chrome on Windows\"",
+            "nullable": true
+          },
+          "uiFingerprint": {
+            "type": "string",
             "nullable": true
           },
           "currentClientInfo": {
@@ -26776,6 +27014,16 @@
             "description": "How large the cover images should be",
             "format": "int32"
           },
+          "pdfRenderResolution": {
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "type": "integer",
+            "description": "How large rendered PDF images should be",
+            "format": "int32"
+          },
           "smtpConfig": {
             "$ref": "#/components/schemas/SmtpConfigDto"
           },
@@ -27058,7 +27306,8 @@
               6,
               7,
               8,
-              9
+              9,
+              10
             ],
             "type": "integer",
             "format": "int32"
@@ -29039,6 +29288,12 @@
                 "items": {
                   "$ref": "#/components/schemas/KeyBind"
                 }
+              },
+              "OffsetDoublePage": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/KeyBind"
+                }
               }
             },
             "additionalProperties": false
@@ -29144,6 +29399,30 @@
             ],
             "type": "integer",
             "format": "int32"
+          },
+          "deviceIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "seriesIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "libraryIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
           },
           "readingDirection": {
             "enum": [
