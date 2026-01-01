@@ -64,8 +64,10 @@ public class KoreaderService : IKoreaderService
         // Update the bookScrollId if possible
         var reportedProgress = koreaderBookDto.progress;
         KoreaderHelper.UpdateProgressDto(userProgressDto, koreaderBookDto.progress);
-        _logger.LogDebug("Converting KOReader progress from {ReportedProgress} to {ScopedProgress}", reportedProgress.Sanitize(), userProgressDto.BookScrollId?.Sanitize());
+        _logger.LogDebug("Converting KOReader progress from {ReportedProgress} to {ScopedProgress}",
+            reportedProgress.Sanitize(), userProgressDto.BookScrollId?.Sanitize());
 
+        // Normal saving from kavita will be //body/h2[1]
         await _readerService.SaveReadingProgress(userProgressDto, userId);
     }
 
@@ -89,7 +91,8 @@ public class KoreaderService : IKoreaderService
         _logger.LogDebug("Converting KOReader progress from {KavitaProgress} to {KOReaderProgress}", originalScrollId?.Sanitize() ?? string.Empty, progressDto?.BookScrollId?.Sanitize() ?? string.Empty);
 
 
-        return new KoreaderBookDtoBuilder(bookHash).WithProgress(koreaderProgress)
+        return new KoreaderBookDtoBuilder(bookHash)
+            .WithProgress(koreaderProgress)
             .WithPercentage(progressDto?.PageNum, file.Pages)
             .WithDeviceId(settingsDto.InstallId, userId)
             .WithTimestamp(progressDto?.LastModifiedUtc)
