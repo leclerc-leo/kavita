@@ -7,7 +7,6 @@ import {
 } from "../../../carousel/_components/carousel-reel/carousel-reel.component";
 import {SeriesCardComponent} from "../../../cards/series-card/series-card.component";
 import {map, Observable} from "rxjs";
-import {AccountService} from "../../../_services/account.service";
 import {translate, TranslocoDirective} from "@jsverse/transloco";
 import {SeriesService} from "../../../_services/series.service";
 import {FilterV2} from "../../../_models/metadata/v2/filter-v2";
@@ -16,6 +15,7 @@ import {FilterStatement} from "../../../_models/metadata/v2/filter-statement";
 import {FilterComparison} from "../../../_models/metadata/v2/filter-comparison";
 import {FilterField} from "../../../_models/metadata/v2/filter-field";
 import {SortField} from "../../../_models/metadata/series-filter";
+import {QueryContext} from "../../../_models/metadata/v2/query-context";
 
 type OverviewStream = {
   title: string;
@@ -37,7 +37,7 @@ const JustFinishedReadingFilter = {
   name: translate('profile-overview.just-finished-reading'),
   sortOptions: {
     sortField: SortField.ReadProgress,
-    isAscending: true
+    isAscending: false
   }
 } as FilterV2;
 
@@ -55,13 +55,11 @@ const JustFinishedReadingFilter = {
 })
 export class ProfileOverviewComponent {
 
-  private readonly accountService = inject(AccountService);
   private readonly seriesService = inject(SeriesService);
 
   memberInfo = input.required<MemberInfo>();
 
   streams = computed<OverviewStream[]>(() => {
-    const userId = this.accountService.currentUserSignal()!.id;
     const memberId = this.memberInfo().id;
 
     return [
@@ -84,10 +82,10 @@ export class ProfileOverviewComponent {
       {
         title: translate('profile-overview.just-finished-reading'),
         api: this.seriesService
-          .getAllSeriesV2(0, 20, JustFinishedReadingFilter, memberId)
+          .getAllSeriesV2(0, 20, JustFinishedReadingFilter, QueryContext.None, memberId)
           .pipe(map(pr => pr.result)),
         nextPageLoader: (pageNum, pageSize) => this.seriesService
-          .getAllSeriesV2(pageNum, pageSize, JustFinishedReadingFilter, memberId),
+          .getAllSeriesV2(pageNum, pageSize, JustFinishedReadingFilter, QueryContext.None, memberId),
       }
     ];
   });

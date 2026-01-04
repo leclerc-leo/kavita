@@ -89,6 +89,18 @@ public class StatsController(
         return Ok(await statService.GetPopularSeries());
     }
 
+    /// <summary>
+    /// Gets the top 5 most popular reading lists. Counts a reading list as active if a user has read at least some
+    /// </summary>
+    /// <returns></returns>
+    [Authorize(PolicyGroups.AdminPolicy)]
+    [HttpGet("popular-reading-list")]
+    [ResponseCache(CacheProfileName = ResponseCacheProfiles.Statistics)]
+    public async Task<ActionResult<IList<StatCount<SeriesDto>>>> GetPopularReadingList()
+    {
+        return Ok(await statService.GetPopularReadingList());
+    }
+
     [Authorize(PolicyGroups.AdminPolicy)]
     [HttpGet("popular-genres")]
     [ResponseCache(CacheProfileName = ResponseCacheProfiles.Statistics)]
@@ -106,22 +118,12 @@ public class StatsController(
     }
 
     [Authorize(PolicyGroups.AdminPolicy)]
-    [HttpGet("popular-authors")]
+    [HttpGet("popular-people")]
     [ResponseCache(CacheProfileName = ResponseCacheProfiles.Statistics)]
-    public async Task<ActionResult<IList<StatCount<PersonDto>>>> GetPopularAuthors()
+    public async Task<ActionResult<IList<StatCount<PersonDto>>>> GetPopularPeople(PersonRole role)
     {
-        return Ok(await statService.GetPopularPerson(PersonRole.Writer));
+        return Ok(await statService.GetPopularPerson(role));
     }
-
-    [Authorize(PolicyGroups.AdminPolicy)]
-    [HttpGet("popular-artists")]
-    [ResponseCache(CacheProfileName = ResponseCacheProfiles.Statistics)]
-    public async Task<ActionResult<IList<StatCount<PersonDto>>>> GetPopularArtists()
-    {
-        return Ok(await statService.GetPopularPerson(PersonRole.CoverArtist));
-    }
-
-
 
     /// <summary>
     /// Top 5 most active readers for the given timeframe
