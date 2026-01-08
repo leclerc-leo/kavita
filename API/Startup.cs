@@ -238,7 +238,6 @@ public class Startup
         });
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
         IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider,
         IDirectoryService directoryService, IUnitOfWork unitOfWork, IVersionUpdaterService versionService)
@@ -432,7 +431,7 @@ public class Startup
                     #region v0.7.14
                     await MigrateEmailTemplates.Migrate(directoryService, logger);
                     await MigrateVolumeNumber.Migrate(dataContext, logger);
-                    await MigrateWantToReadImport.Migrate(unitOfWork, dataContext, directoryService, logger);
+                    await new MigrateWantToReadImport(unitOfWork, directoryService).RunAsync(dataContext, logger);
                     await MigrateManualHistory.Migrate(dataContext, logger);
                     await MigrateClearNightlyExternalSeriesRecords.Migrate(dataContext, logger);
                     #endregion
@@ -495,7 +494,7 @@ public class Startup
                     await new MigrateToAuthKeys().RunAsync(dataContext, logger);
                     await new MigrateMissingAppUserRatingDateColumns().RunAsync(dataContext, logger);
                     await new MigrateFormatToActivityDataV2().RunAsync(dataContext, logger);
-                    await new MigrateIncorrectUtcMidnightRollovers().RunAsync(dataContext, logger);
+                    await new MigrateIncorrectUtcTimes().RunAsync(dataContext, logger);
                     #endregion
 
                     #endregion
