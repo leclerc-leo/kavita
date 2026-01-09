@@ -2800,6 +2800,7 @@
         "overview-tab": "{{tabs.overview-tab}}",
         "stats-tab": "{{tabs.stats-tab}}",
         "reviews-tab": "{{tabs.reviews-tab}}",
+        "activity-tab": "{{tabs.activity-tab}}",
         "no-reviews": "No Reviews yet",
         "total-reads-badge": "{{reads}} Reads",
         "k+-badge": "K+ Subscriber"
@@ -2831,6 +2832,24 @@
     "profile-image": {
         "edit-image-alt": "Edit Image",
         "reset-image-alt": "Reset Image"
+    },
+
+    "profile-activity": {
+        "time-filter-title": "{{username}}'s activity through",
+        "pages-count": "{{series-detail.pages-count}}",
+        "words-count": "{{series-detail.words-count}}",
+        "no-data": "{{common.no-data}}",
+        "duration": "Duration",
+        "pages-read": "{{reading-pace.pages-read}}",
+        "words-read": "{{reading-pace.words-read}}",
+        "progress": "Progress",
+        "time": "Time",
+        "info-alt": "More Info",
+        "chapter-detail-modal-title": "{{seriesName}}",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "pagination-label": "Activity pagination",
+        "page-info": "Page {{current}} of {{total}} ({{items}} total records)"
     },
 
     "preferred-format": {
@@ -3656,7 +3675,8 @@
         "smart-filters-tab": "Smart Filters",
         "annotations-tab": "Annotations",
         "overview-tab": "Overview",
-        "management-tab": "Management"
+        "management-tab": "Management",
+        "activity-tab": "Activity"
     },
 
     "common": {
