@@ -16,7 +16,7 @@ import {translate, TranslocoDirective} from '@jsverse/transloco';
 import {StatisticsService} from '../../../_services/statistics.service';
 import {ReadingHistoryChapterItem, ReadingHistoryItem} from '../../../_models/stats/reading-history-item';
 import {LoadingComponent} from '../../../shared/loading/loading.component';
-import {DatePipe, DOCUMENT, NgTemplateOutlet, TitleCasePipe} from '@angular/common';
+import {DOCUMENT, NgTemplateOutlet, TitleCasePipe} from '@angular/common';
 import {StatsFilter} from '../../../statistics/_models/stats-filter';
 import {RouterLink} from '@angular/router';
 import {
@@ -33,6 +33,7 @@ import {CompactNumberPipe} from '../../../_pipes/compact-number.pipe';
 import {DurationPipe} from '../../../_pipes/duration.pipe';
 import {Pagination} from '../../../_models/pagination';
 import {NgbPagination, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
+import {UtcToLocalTimePipe} from "../../../_pipes/utc-to-local-time.pipe";
 
 
 @Component({
@@ -40,7 +41,6 @@ import {NgbPagination, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
   imports: [
     TranslocoDirective,
     LoadingComponent,
-    DatePipe,
     RouterLink,
     LibraryAndTimeSelectorComponent,
     StatsNoDataComponent,
@@ -53,6 +53,7 @@ import {NgbPagination, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
     DurationPipe,
     NgbPagination,
     NgbTooltip,
+    UtcToLocalTimePipe,
   ],
   templateUrl: './profile-activity.component.html',
   styleUrl: './profile-activity.component.scss',
@@ -125,15 +126,13 @@ export class ProfileActivityComponent {
       });
   }
 
-  protected onPageChange(page: number): void {
+  protected onPageChange(page: number, scroll: boolean): void {
     if (page === this.currentPage() || this.isLoading()) return;
 
     this.loadPage(page);
-    this.document.querySelector('.activity-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  protected formatProgress(entry: ReadingHistoryItem): string {
-    return `${entry.pagesRead}/${entry.totalPages}`;
+    if (scroll) {
+      this.document.querySelector('.activity-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   /**
@@ -164,14 +163,14 @@ export class ProfileActivityComponent {
   }
 
   protected displayInfo(item: ReadingHistoryItem): void {
-    const [_, component] = this.modalService.open(ListSelectModalComponent<ReadingHistoryChapterItem>, {
+    const [_, component] = this.modalService.open(ListSelectModalComponent<{entry: ReadingHistoryItem, chapter: ReadingHistoryChapterItem}>, {
       size: 'lg',
       centered: true
     });
 
-    component.title.set(translate('profile-activity.chapter-detail-modal-title', { seriesName: item.seriesName }));
+    component.title.set(item.seriesName);
     component.showConfirm.set(false);
-    component.inputItems.set(item.chapters.map(c => ({ value: c, label: `${c.label}` })));
+    component.inputItems.set(item.chapters.map(c => ({ value: {entry: item, chapter: c}, label: `${c.label}` })));
     component.itemTemplate.set(this.chapterInfoRow());
     component.itemsBeforeVirtual.set(5);
   }

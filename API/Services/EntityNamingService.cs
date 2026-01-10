@@ -153,7 +153,7 @@ public partial class EntityNamingService : IEntityNamingService
         if (volume.IsLooseLeaf())
         {
             return volume.Chapters.Count == 1
-                ? string.Empty  // Caller may want to handle this (e.g., use series name only)
+                ? string.Empty
                 : FormatChapterTitle(libraryType, chapter, chapterLabel, issueLabel, bookLabel);
         }
 
@@ -167,6 +167,11 @@ public partial class EntityNamingService : IEntityNamingService
         var volName = FormatVolumeName(libraryType, volume, volumeLabel)
                       ?? FormatStandardVolumeName(volume.Name, volumeLabel);
         var chapTitle = FormatChapterTitle(libraryType, chapter, chapterLabel, issueLabel, bookLabel);
+
+        if (string.IsNullOrEmpty(volName))
+        {
+            return chapTitle;
+        }
 
         return $"{volName} - {chapTitle}";
     }
@@ -344,7 +349,11 @@ public partial class EntityNamingService : IEntityNamingService
         // Loose-leaf without title
         if (Parser.IsLooseLeafVolume(firstChapter.Range))
         {
-            return null;
+            // Volume is real (not loose-leaf) - it has a meaningful name, use it
+            if (!volume.IsLooseLeaf())
+            {
+                return volume.Name;
+            }
         }
 
         // Extract title from filename
@@ -363,6 +372,11 @@ public partial class EntityNamingService : IEntityNamingService
     /// </summary>
     private static string FormatStandardVolumeName(string volumeName, string volumeLabel)
     {
+        if (Parser.IsLooseLeafVolume(volumeName))
+        {
+            return string.Empty;
+        }
+
         // Already has the label - return as-is
         if (HasVolumePrefix(volumeName, volumeLabel))
         {

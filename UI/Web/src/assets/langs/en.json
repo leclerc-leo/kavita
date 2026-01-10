@@ -2683,7 +2683,8 @@
         "not-classified": "Not Classified",
         "total-file-size-title": "Total File Size:",
         "download-file-for-extension-header": "Download Report",
-        "download-file-for-extension-alt": "Download files Report for {{extension}}"
+        "download-file-for-extension-alt": "Download files Report for {{extension}}",
+        "no-data": "{{common.no-data}}"
     },
 
     "reading-activity": {
@@ -2714,7 +2715,8 @@
         "visualisation-label": "Visualisation",
         "data-table-label": "Data Table",
         "year-header": "Year",
-        "count-header": "Count"
+        "count-header": "Count",
+        "no-data": "{{common.no-data}}"
     },
 
     "series-preview-drawer": {
@@ -2842,14 +2844,19 @@
         "duration": "Duration",
         "pages-read": "{{reading-pace.pages-read}}",
         "words-read": "{{reading-pace.words-read}}",
-        "progress": "Progress",
         "time": "Time",
         "info-alt": "More Info",
-        "chapter-detail-modal-title": "{{seriesName}}",
         "today": "Today",
         "yesterday": "Yesterday",
         "pagination-label": "Activity pagination",
         "page-info": "Page {{current}} of {{total}} ({{items}} total records)"
+    },
+
+    "user-stats-info-cards": {
+        "pages-read-by-year-title": "Pages read by year",
+        "pages-count": "{{num}} pages",
+        "words-read-by-year-title": "Words read by year",
+        "words-count": "{{num}} words"
     },
 
     "preferred-format": {
@@ -2922,7 +2929,7 @@
         "reading-time": "Reading Time",
         "pages": "Pages",
         "words": "Words",
-        "chapters": "Chapters",
+        "chapters": "Completed Chapters",
         "no-activity-alt": "No Activity",
         "no-activity-tooltip": "No reading activity on {{date}}.",
         "all-time": "{{time-periods.all-time}}",
@@ -2959,7 +2966,8 @@
         "during-entire-life-server": "since the beginning",
         "during-year": "during {{year}}",
         "during-from-to": "from {{startYear}} to {{endYear}}",
-        "during-select": "Select a time range"
+        "during-select": "Select a time range",
+        "close": "{{common.close}}"
     },
 
     "client-device-type-pipe": {
@@ -3387,7 +3395,8 @@
         "confirm-delete-font": "Removing this font will delete it from the disk. You can grab it from temp directory before removal.",
         "confirm-force-delete-font": "This font is currently in use. Do you want to force delete it? This will force users back to the Default font.",
         "font-in-use": "Cannot delete as the font is in use by one or more users.",
-        "k+-resend-welcome-email-success": "An email was sent to your Kavita+ email"
+        "k+-resend-welcome-email-success": "An email was sent to your Kavita+ email",
+        "profile-unauthorized": "This user is not sharing their profile"
     },
 
     "read-time-pipe": {

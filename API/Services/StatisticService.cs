@@ -917,7 +917,8 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
                     activity.ChapterId,
                     activity.PagesRead,
                     activity.WordsRead,
-                    activity.TotalPages
+                    activity.TotalPages,
+                    activity.EndPage,
                 })
             .ToListAsync();
 
@@ -941,7 +942,7 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
                 TotalWords = dayGroup.Sum(x => x.WordsRead),
                 // Count distinct chapters that were fully read per day
                 TotalChaptersFullyRead = dayGroup
-                    .Where(x => x.PagesRead > 0 && x.TotalPages > 0 && x.PagesRead >= x.TotalPages)
+                    .Where(x => x.PagesRead > 0 && x.TotalPages > 0 && x.EndPage >= x.TotalPages)
                     .Select(x => x.ChapterId)
                     .Distinct()
                     .Count()
@@ -1683,15 +1684,19 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
                 a.ChapterId,
                 ChapterNumber = a.Chapter.Number,
                 ChapterRange = a.Chapter.Range,
+                ChapterMinNumber = a.Chapter.MinNumber,
+                ChapterMaxNumber = a.Chapter.MaxNumber,
                 ChapterTitle = a.Chapter.Title,
                 ChapterTitleName = a.Chapter.TitleName,
                 ChapterIsSpecial = a.Chapter.IsSpecial,
 
                 // Volume fields for VolumeDto
-                VolumeId = a.Chapter.VolumeId,
+                a.Chapter.VolumeId,
                 VolumeNumber = a.Chapter.Volume.Number,
                 VolumeName = a.Chapter.Volume.Name,
-                VolumeChapters = a.Chapter.Volume.Chapters.Select(c => c.Id).ToList(), // Just need count, but need list for IsLooseLeaf/IsSpecial checks
+                VolumeMinNumber = a.Chapter.Volume.MinNumber,
+                VolumeMaxNumber = a.Chapter.Volume.MaxNumber,
+                VolumeChapters = a.Chapter.Volume.Chapters.Select(c => c.Id).ToList(),
 
                 a.LibraryId,
                 LibraryName = a.Library.Name,
@@ -1751,13 +1756,14 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
 
                     Chapters = x.Select(s =>
                     {
-                        // Build minimal DTOs for naming
                         var chapterDto = new ChapterDto
                         {
                             Id = s.ChapterId,
                             Number = s.ChapterNumber,
                             Range = s.ChapterRange,
                             Title = s.ChapterTitle,
+                            MinNumber = s.ChapterMinNumber,
+                            MaxNumber = s.ChapterMaxNumber,
                             TitleName = s.ChapterTitleName,
                             IsSpecial = s.ChapterIsSpecial,
                         };
@@ -1767,7 +1773,11 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
                             Id = s.VolumeId,
                             Number = s.VolumeNumber,
                             Name = s.VolumeName,
-                            Chapters = s.VolumeChapters.Select(id => new ChapterDto { Id = id }).ToList(),
+                            MinNumber = s.VolumeMinNumber,
+                            MaxNumber = s.VolumeMaxNumber,
+                            Chapters = s.VolumeChapters
+                                .Select(id => id == chapterDto.Id ? chapterDto : new ChapterDto { Id = id })
+                                .ToList(),
                         };
 
                         return new ReadingHistoryChapterItemDto
@@ -1806,7 +1816,6 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
     {
         if (chapterIds.Count == 0) return 0;
 
-        // For large sets, batch to avoid SQLite parameter limits (max ~999)
         if (chapterIds.Count <= 500)
         {
             return await context.ChapterPeople
@@ -1816,7 +1825,6 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
                 .CountAsync();
         }
 
-        // Batch approach for large chapter sets
         var authorIds = new HashSet<int>();
         foreach (var batch in chapterIds.Chunk(500))
         {
@@ -1837,7 +1845,6 @@ public class StatisticService(ILogger<StatisticService> logger, DataContext cont
     {
         var baseQuery = BuildRatingQuery(filter, userId, socialPreferences);
 
-        // Single query with conditional counting
         var counts = await baseQuery
             .GroupBy(r => 1)
             .Select(g => new
