@@ -1829,7 +1829,8 @@
         "not-classified": "未分类",
         "total-file-size-title": "总文件大小：",
         "download-file-for-extension-header": "下载报告",
-        "download-file-for-extension-alt": "下载 {{extension}} 的文件报告"
+        "download-file-for-extension-alt": "下载 {{extension}} 的文件报告",
+        "no-data": "{{common.no-data}}"
     },
     "reading-activity": {
         "title": "阅读活动",
@@ -1852,7 +1853,8 @@
         "visualisation-label": "可视化",
         "data-table-label": "数据表格",
         "year-header": "年份",
-        "count-header": "数量"
+        "count-header": "数量",
+        "no-data": "{{common.no-data}}"
     },
     "series-preview-drawer": {
         "staff-label": "工作人员",
@@ -2202,7 +2204,8 @@
         "confirm-force-delete-font": "此字体目前正在使用中。是否要强制删除它？这将强制用户恢复使用默认字体。",
         "font-in-use": "无法删除，因为该字体正在被一个或多个用户使用。",
         "k+-resend-welcome-email-success": "一封电子邮件已发送至您的 Kavita+ 电子邮箱",
-        "confirm-delete-auth-key": "您确定要删除此授权密钥吗？"
+        "confirm-delete-auth-key": "您确定要删除此授权密钥吗？",
+        "profile-unauthorized": "此用户未分享其个人配置文件"
     },
     "read-time-pipe": {
         "less-than-hour": "<1 小时",
@@ -3269,7 +3272,7 @@
         "reading-time": "阅读时间",
         "pages": "页数",
         "words": "字数",
-        "chapters": "章节",
+        "chapters": "已完成章节",
         "no-activity-tooltip": "{{date}} 当天没有阅读活动。",
         "no-activity-alt": "无活动",
         "all-time": "{{time-periods.all-time}}",
@@ -3304,7 +3307,8 @@
         "during-from-to": "从 {{startYear}} 到 {{endYear}}",
         "during-select": "选择时间范围",
         "during-entire-life-profile": "整个期间",
-        "during-entire-life-server": "起始期间"
+        "during-entire-life-server": "起始期间",
+        "close": "{{common.close}}"
     },
     "client-device-type-pipe": {
         "mobile": "手机",
@@ -3405,5 +3409,11 @@
         "yesterday": "昨天",
         "pagination-label": "活动分页",
         "page-info": "第 {{current}} 页，共 {{total}} 页（共 {{items}} 条记录）"
+    },
+    "user-stats-info-cards": {
+        "pages-read-by-year-title": "年度阅读页数",
+        "pages-count": "{{num}} 页",
+        "words-read-by-year-title": "年度阅读字数",
+        "words-count": "{{num}} 字"
     }
 }

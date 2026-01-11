@@ -2517,14 +2517,16 @@
         "not-classified": "Не класифіковано",
         "total-file-size-title": "Загальний розмір файлу:",
         "download-file-for-extension-header": "Завантажити звіт",
-        "download-file-for-extension-alt": "Завантажити файли Звіт для {{extension}}"
+        "download-file-for-extension-alt": "Завантажити файли Звіт для {{extension}}",
+        "no-data": "{{common.no-data}}"
     },
     "publication-status-stats": {
         "title": "Статус публікації",
         "visualisation-label": "Візуалізація",
         "data-table-label": "Таблиця даних",
         "year-header": "Рік",
-        "count-header": "Кількість"
+        "count-header": "Кількість",
+        "no-data": "{{common.no-data}}"
     },
     "next-expected-card": {
         "title": "~{{date}}",
@@ -2766,7 +2768,8 @@
         "confirm-force-delete-font": "Цей шрифт зараз використовується. Ви хочете примусово видалити його? Це змусить користувачів повернутися до шрифту за замовчуванням.",
         "font-in-use": "Неможливо видалити, оскільки шрифт використовується одним або кількома користувачами.",
         "k+-resend-welcome-email-success": "На вашу електронну адресу Kavita+ було надіслано електронного листа",
-        "confirm-delete-auth-key": "Ви впевнені, що хочете видалити цей ключ авторизації?"
+        "confirm-delete-auth-key": "Ви впевнені, що хочете видалити цей ключ авторизації?",
+        "profile-unauthorized": "Цей користувач не надає доступ до свого профілю"
     },
     "read-time-pipe": {
         "less-than-hour": "<1 Година",
@@ -3269,7 +3272,7 @@
         "reading-time": "Час Читання",
         "pages": "Сторінки",
         "words": "Слова",
-        "chapters": "Розділи",
+        "chapters": "Завершені розділи",
         "no-activity-tooltip": "Немає читацької активності {{date}}.",
         "no-activity-alt": "Немає активності",
         "all-time": "{{time-periods.all-time}}",
@@ -3304,7 +3307,8 @@
         "during-from-to": "з {{startYear}} до {{endYear}}",
         "during-select": "Виберіть часовий діапазон",
         "during-entire-life-profile": "протягом усього їхнього життя",
-        "during-entire-life-server": "з самого початку"
+        "during-entire-life-server": "з самого початку",
+        "close": "{{common.close}}"
     },
     "client-device-type-pipe": {
         "mobile": "Мобільний",
@@ -3405,5 +3409,11 @@
         "yesterday": "Вчора",
         "pagination-label": "Пагінація активності",
         "page-info": "Сторінка {{current}} з {{total}} (всього записів: {{items}})"
+    },
+    "user-stats-info-cards": {
+        "pages-read-by-year-title": "Прочитані сторінки за роками",
+        "pages-count": "{{num}} сторінки",
+        "words-read-by-year-title": "Слова, прочитані за роками",
+        "words-count": "{{num}} слова"
     }
 }

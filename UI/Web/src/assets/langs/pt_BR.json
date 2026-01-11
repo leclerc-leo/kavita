@@ -1829,7 +1829,8 @@
         "not-classified": "Não Classificado",
         "total-file-size-title": "Tamanho Total do Arquivo:",
         "download-file-for-extension-header": "Baixar Relatório",
-        "download-file-for-extension-alt": "Baixe o Relatório de arquivos para {{extension}}"
+        "download-file-for-extension-alt": "Baixe o Relatório de arquivos para {{extension}}",
+        "no-data": "{{common.no-data}}"
     },
     "reading-activity": {
         "title": "Atividade de Leitura",
@@ -1852,7 +1853,8 @@
         "visualisation-label": "Visualização",
         "data-table-label": "Tabela de Dados",
         "year-header": "Ano",
-        "count-header": "Número"
+        "count-header": "Número",
+        "no-data": "{{common.no-data}}"
     },
     "series-preview-drawer": {
         "staff-label": "Pessoal",
@@ -2202,7 +2204,8 @@
         "confirm-force-delete-font": "Esta fonte está atualmente em uso. Deseja forçar a exclusão? Isso forçará os usuários a voltar para a fonte padrão.",
         "font-in-use": "Não foi possível excluir porque a fonte está em uso por um ou mais usuários.",
         "k+-resend-welcome-email-success": "Um e-mail foi enviado para o seu e-mail Kavita+",
-        "confirm-delete-auth-key": "Tem certeza de que deseja excluir esta chave de autenticação?"
+        "confirm-delete-auth-key": "Tem certeza de que deseja excluir esta chave de autenticação?",
+        "profile-unauthorized": "Este usuário não está compartilhando seu perfil"
     },
     "read-time-pipe": {
         "less-than-hour": "<1 Hora",
@@ -3207,7 +3210,8 @@
         "during-from-to": "de {{startYear}} a {{endYear}}",
         "during-select": "Selecionar uma faixa de tempo",
         "during-entire-life-profile": "durante toda a sua vida",
-        "during-entire-life-server": "desde o começo"
+        "during-entire-life-server": "desde o começo",
+        "close": "{{common.close}}"
     },
     "client-device-type-pipe": {
         "mobile": "Celular",
@@ -3353,7 +3357,7 @@
         "reading-time": "Tempo Lendo",
         "pages": "Páginas",
         "words": "Palavras",
-        "chapters": "Capítulos",
+        "chapters": "Capítulos Concluídos",
         "no-activity-tooltip": "Nenhuma atividade de leitura em {{date}}.",
         "no-activity-alt": "Nenhuma Atividade",
         "all-time": "{{time-periods.all-time}}",
@@ -3405,5 +3409,11 @@
         "yesterday": "Ontem",
         "pagination-label": "Atividades de paginação",
         "page-info": "Página {{current}} de {{total}} ({{items}} registros no total)"
+    },
+    "user-stats-info-cards": {
+        "pages-read-by-year-title": "Páginas lidas por ano",
+        "pages-count": "{{num}} páginas",
+        "words-read-by-year-title": "Palavras lidas por ano",
+        "words-count": "{{num}} palavras"
     }
 }
