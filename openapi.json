@@ -2,12 +2,12 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Kavita",
-    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.8.24",
+    "description": "Kavita provides a set of APIs that are authenticated by JWT. JWT token can be copied from local storage. Assume all fields of a payload are required. Built against v0.8.8.26",
     "license": {
       "name": "GPL-3.0",
       "url": "https://github.com/Kareadita/Kavita/blob/develop/LICENSE"
     },
-    "version": "0.8.8.24"
+    "version": "0.8.8.26"
   },
   "servers": [
     {
@@ -14614,7 +14614,6 @@
           "Series"
         ],
         "summary": "Get the age rating for the API.Entities.Enums.AgeRating enum value",
-        "description": "This is cached for an hour",
         "parameters": [
           {
             "name": "ageRating",
@@ -17000,7 +16999,7 @@
         "tags": [
           "Stats"
         ],
-        "summary": "Desktop vs Mobile spread over last month",
+        "summary": "Desktop vs Mobile spread over this month",
         "responses": {
           "200": {
             "description": "OK",
