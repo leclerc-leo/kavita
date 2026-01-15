@@ -15,6 +15,7 @@ public class BasicParser(IDirectoryService directoryService, IDefaultParser imag
     public override ParserInfo? Parse(string filePath, string rootPath, string libraryRoot, LibraryType type, bool enableMetadata = true, ComicInfo? comicInfo = null)
     {
         var fileName = directoryService.FileSystem.Path.GetFileNameWithoutExtension(filePath);
+        var parentFolder = Path.GetFileName(Path.GetDirectoryName(filePath)); // Get the immediate folder name
         // TODO: Potential Bug: This will return null, but on Image libraries, if all images, we would want to include this.
         if (type != LibraryType.Image && Parser.IsCoverImage(directoryService.FileSystem.Path.GetFileName(filePath))) return null;
 
@@ -29,7 +30,7 @@ public class BasicParser(IDirectoryService directoryService, IDefaultParser imag
             Format = Parser.ParseFormat(filePath),
             Title = Parser.RemoveExtensionIfSupported(fileName)!,
             FullFilePath = Parser.NormalizePath(filePath),
-            Series = Parser.ParseSeries(fileName, type),
+            Series = Parser.CleanTitle(parentFolder),
             ComicInfo = comicInfo,
             Chapters = Parser.ParseChapter(fileName, type),
             Volumes = Parser.ParseVolume(fileName, type),
