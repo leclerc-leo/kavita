@@ -321,21 +321,21 @@ export class InfiniteScrollerComponent implements OnInit, OnChanges, OnDestroy, 
       this.cdRef.markForCheck();
     }, {injector: this.injector});
 
-    if (this.goToPage) {
-      this.goToPage.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(page => {
-        const isSamePage = this.pageNum === page;
-        if (isSamePage) { return; }
-        this.debugLog('[GoToPage] jump has occured from ' + this.pageNum + ' to ' + page);
+    // if (this.goToPage) {
+    //   this.goToPage.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(page => {
+    //     const isSamePage = this.pageNum === page;
+    //     if (isSamePage) { return; }
+    //     this.debugLog('[GoToPage] jump has occured from ' + this.pageNum + ' to ' + page);
 
-        if (this.pageNum < page) {
-          this.scrollingDirection = PAGING_DIRECTION.FORWARD;
-        } else {
-          this.scrollingDirection = PAGING_DIRECTION.BACKWARDS;
-        }
+    //     if (this.pageNum < page) {
+    //       this.scrollingDirection = PAGING_DIRECTION.FORWARD;
+    //     } else {
+    //       this.scrollingDirection = PAGING_DIRECTION.BACKWARDS;
+    //     }
 
-        this.setPageNum(page, true);
-      });
-    }
+    //     this.setPageNum(page, true);
+    //   });
+    // }
 
     if (this.bookmarkPage) {
       this.bookmarkPage.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(page => {
@@ -364,7 +364,7 @@ export class InfiniteScrollerComponent implements OnInit, OnChanges, OnDestroy, 
   }
 
   ngAfterViewInit() {
-    this.bottomSpacerIntersectionObserver.observe(this.bottomSpacer.nativeElement);
+    // this.bottomSpacerIntersectionObserver.observe(this.bottomSpacer.nativeElement);
   }
 
   recalculateImageWidth() {
@@ -500,8 +500,8 @@ export class InfiniteScrollerComponent implements OnInit, OnChanges, OnDestroy, 
         requestAnimationFrame(() => this.scrollService.scrollTo((SPACER_SCROLL_INTO_PX / 2), reader));
       } else if (this.getScrollTop() < 5 && this.pageNum === 0 && this.atTop) {
         // If already at top, then we are moving on
-        this.loadPrevChapter.emit();
-        this.cdRef.markForCheck();
+        // this.loadPrevChapter.emit();
+        // this.cdRef.markForCheck();
       }
     }
   }
@@ -681,7 +681,7 @@ export class InfiniteScrollerComponent implements OnInit, OnChanges, OnDestroy, 
     if (!this.allImagesLoaded) return;
 
     this.setPageNum(this.totalPages);
-    this.loadNextChapter.emit();
+    // this.loadNextChapter.emit();
   }
 
   /**
