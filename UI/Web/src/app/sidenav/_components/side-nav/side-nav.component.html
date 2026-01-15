@@ -110,14 +110,4 @@
     <div class="side-nav-overlay" (click)="toggleNavBar()" [ngClass]="{'closed' : sideNavCollapsed}"></div>
   }
 
-  <div class="sidenav-bottom" [ngClass]="{'closed' : sideNavCollapsed,
-      'hidden': sideNavVisible === false || (licenseService.hasValidLicense$ | async) === true}">
-    @if ((licenseService.hasValidLicense$ | async) === false) {
-      <app-side-nav-item [ngClass]="'donate'" icon="fa-heart"
-                        [ngbTooltip]="t('donate-tooltip')"
-                        [link]="WikiLink.Donation"
-                        [external]="true" />
-    }
-  </div>
-
 </ng-container>
