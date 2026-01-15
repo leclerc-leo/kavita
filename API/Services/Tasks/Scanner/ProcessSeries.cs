@@ -164,6 +164,8 @@ public class ProcessSeries(
 
             series.UpdateLastFolderScanned();
 
+            UpdateSeriesLatestCounts(series);
+            
             if (unitOfWork.HasChanges())
             {
                 try
@@ -987,5 +989,59 @@ public class ProcessSeries(
         peopleToAdd.ForEach(p => existingPeopleDict[p.NormalizedName] = p);
 
         return existingPeopleDict;
+    }
+
+    private void UpdateSeriesLatestCounts(Series series)
+    {
+        // Safety check
+        if (series.Volumes == null || !series.Volumes.Any())
+        {
+            series.LastAddedVolume = 0;
+            series.LastAddedChapter = 0;
+            return;
+        }
+
+        // FIX: Filter out volumes that are 100000 (Specials)
+        var validVolumes = series.Volumes
+            .Where(v => v.MaxNumber < 99999) 
+            .ToList();
+
+        // If there are no "real" volumes (only specials), we set counts to 0
+        if (validVolumes.Count == 0)
+        {
+            series.LastAddedVolume = 0;
+            series.LastAddedChapter = 0;
+            return;
+        }
+
+        // 1. Find the Volume object with the highest MaxNumber
+        var maxVolumeObj = validVolumes
+            .OrderByDescending(v => v.MaxNumber)
+            .FirstOrDefault();
+
+        if (maxVolumeObj == null)
+        {
+            series.LastAddedVolume = 0;
+            series.LastAddedChapter = 0;
+            return;
+        }
+
+        double maxVolNum = maxVolumeObj.MaxNumber;
+
+        // 2. Find the highest chapter number INSIDE that specific volume object
+        double maxChapNum = 0;
+        
+        if (maxVolumeObj.Chapters != null && maxVolumeObj.Chapters.Any())
+        {
+            maxChapNum = maxVolumeObj.Chapters.Max(c => c.MaxNumber);
+        }
+
+        // 3. Update the series if changed
+        if (Math.Abs(series.LastAddedVolume - maxVolNum) > 0.001 || 
+            Math.Abs(series.LastAddedChapter - maxChapNum) > 0.001)
+        {
+            series.LastAddedVolume = maxVolNum;
+            series.LastAddedChapter = maxChapNum;
+        }
     }
 }

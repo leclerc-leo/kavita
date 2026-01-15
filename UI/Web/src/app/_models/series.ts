@@ -48,6 +48,8 @@ export interface Series extends IHasCover, IHasReadingTime, IHasProgress {
    * DateTime representing last time a chapter was added to the Series
    */
   lastChapterAdded: string;
+  lastAddedVolume: number;
+  lastAddedChapter: number;
   /**
    * DateTime representing last time a chapter was added to the Series
    */

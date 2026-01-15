@@ -106,5 +106,8 @@ public sealed record SeriesDto : IHasReadTimeEstimate, IHasCoverImage
         SecondaryColor = string.Empty;
     }
 
+    public double LastAddedVolume { get; set; }
+    public double LastAddedChapter { get; set; }
 
+    
 }

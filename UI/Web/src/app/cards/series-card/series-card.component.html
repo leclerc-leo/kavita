@@ -65,19 +65,24 @@
       }
 
     </div>
-    <div class="card-body meta-title" [ngbTooltip]="series.localizedName.length > 34 ? series.localizedName : null">
-      <div class="card-content d-flex justify-content-center align-items-center text-center" style="width:100%;min-height:58px;">
-        {{relation ? (relation | relationship) : (series.localizedName | defaultValue)}}
-      </div>
-    </div>
+    <div class="card-title-container d-flex align-items-center py-1">
+      <div class="d-flex flex-column flex-grow-1 justify-content-center overflow-hidden" style="min-width: 0;">
+        
+        <span class="card-title text-truncate w-100 text-start" [ngbTooltip]="series.name" placement="top" id="{{series.id}}" style="line-height: 1.2;">
+          <a class="dark-exempt btn-icon" routerLink="/library/{{libraryId}}/series/{{series.id}}">
+            {{series.name}}
+          </a>
+        </span>
 
-    <div class="card-title-container">
-      <app-series-format [format]="series.format" />
-      <span class="card-title" [ngbTooltip]="series.name" placement="top" id="{{series.id}}">
-        <a class="dark-exempt btn-icon" routerLink="/library/{{libraryId}}/series/{{series.id}}">
-          {{series.name}}
-        </a>
-      </span>
+        @if (series.lastAddedVolume > 0 || series.lastAddedChapter > 0) {
+          <div class="text-muted text-truncate" style="font-size: 0.75rem; line-height: 1.1; opacity: 0.8;">
+            Latest
+            @if (series.lastAddedVolume > 0) { Vol. {{series.lastAddedVolume}} }
+            @if (series.lastAddedVolume > 0 && series.lastAddedChapter > 0) { - }
+            @if (series.lastAddedChapter > 0) { Ch. {{series.lastAddedChapter | number:'1.0-2'}} }
+          </div>
+        }
+      </div>
 
       @if (actions && actions.length > 0) {
         <span class="card-actions">

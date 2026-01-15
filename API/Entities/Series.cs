@@ -173,4 +173,10 @@ public class Series : IEntityDate, IHasReadTimeEstimate, IHasCoverImage
     {
         return !IsBlacklisted && !DontMatch;
     }
+    
+    // The highest volume number available in the library
+    public double LastAddedVolume { get; set; }
+
+    // The highest chapter number within the LastAddedVolume
+    public double LastAddedChapter { get; set; }
 }
