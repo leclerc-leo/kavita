@@ -7,6 +7,13 @@
         <app-image height="232.91px" width="160px" [styles]="{'border-radius': '.25rem .25rem 0 0'}" [imageUrl]="imageService.errorImage" />
       }
 
+      @if (series.hasUserRated) {
+        <div class="user-rating-badge">
+          <i class="fa-solid fa-star text-warning"></i>
+          <span>{{ series.userRating | number:'1.1-1' }}</span>
+        </div>
+      }
+
       <div class="progress-banner">
         @if (series.pagesRead > 0 && series.pagesRead < series.pages && series.pages > 0 && series.pagesRead !== series.pages) {
           <p ngbTooltip="{{((series.pagesRead / series.pages) * 100) | number:'1.0-1'}}%" container="body">
