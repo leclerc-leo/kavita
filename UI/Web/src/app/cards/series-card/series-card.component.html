@@ -14,6 +14,12 @@
         </div>
       }
 
+      @if (series.publicationStatus && series.publicationStatus !== 0) {
+        <div class="status-badge">
+          {{series.publicationStatus | publicationStatus }}
+        </div>
+      }
+
       <div class="progress-banner">
         @if (series.pagesRead > 0 && series.pagesRead < series.pages && series.pages > 0 && series.pagesRead !== series.pages) {
           <p ngbTooltip="{{((series.pagesRead / series.pages) * 100) | number:'1.0-1'}}%" container="body">

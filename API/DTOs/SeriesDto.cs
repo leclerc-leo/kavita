@@ -109,5 +109,5 @@ public sealed record SeriesDto : IHasReadTimeEstimate, IHasCoverImage
     public double LastAddedVolume { get; set; }
     public double LastAddedChapter { get; set; }
 
-    
+    public PublicationStatus PublicationStatus { get; set; }
 }

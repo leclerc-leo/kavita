@@ -179,4 +179,6 @@ public class Series : IEntityDate, IHasReadTimeEstimate, IHasCoverImage
 
     // The highest chapter number within the LastAddedVolume
     public double LastAddedChapter { get; set; }
+
+    public PublicationStatus PublicationStatus { get; set; }
 }

@@ -6,6 +6,7 @@ using API.Entities.MetadataMatching;
 using API.Entities.Progress;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -13,12 +14,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260207144438_AddAndPopulatePublicationStatus")]
+    partial class AddAndPopulatePublicationStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
 
             modelBuilder.Entity("API.Entities.AppRole", b =>
                 {
@@ -2288,7 +2291,9 @@ namespace API.Data.Migrations
                             b1.Property<string>("UserAgent")
                                 .IsRequired();
 
-                            b1.ToJson("ClientInfo");
+                            b1
+                                .ToJson("ClientInfo")
+                                .HasColumnType("TEXT");
                         });
 
                     b.HasKey("Id");

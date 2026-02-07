@@ -127,6 +127,7 @@ public class SeriesService : ISeriesService
                 series.Metadata.PublicationStatus = updateSeriesMetadataDto.SeriesMetadata.PublicationStatus;
                 series.Metadata.PublicationStatusLocked = true;
                 series.Metadata.KPlusOverrides.Remove(MetadataSettingField.PublicationStatus);
+                series.PublicationStatus = updateSeriesMetadataDto.SeriesMetadata.PublicationStatus;
             }
 
             if (string.IsNullOrEmpty(updateSeriesMetadataDto.SeriesMetadata.Summary))

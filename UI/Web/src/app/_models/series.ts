@@ -40,6 +40,7 @@ export interface Series extends IHasCover, IHasReadingTime, IHasProgress {
    * Format of the Series
    */
   format: MangaFormat;
+  publicationStatus: number;
   /**
    * DateTime that represents last time the logged in user read this series
    */

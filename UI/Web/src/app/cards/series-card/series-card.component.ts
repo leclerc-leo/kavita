@@ -42,6 +42,7 @@ import {ReaderService} from "../../_services/reader.service";
 import {SeriesFormatComponent} from "../../shared/series-format/series-format.component";
 import {DefaultModalOptions} from "../../_models/default-modal-options";
 import {ReadingProfileService} from "../../_services/reading-profile.service";
+import { PublicationStatusPipe } from 'src/app/_pipes/publication-status.pipe';
 
 function deepClone(obj: any): any {
   if (obj === null || typeof obj !== 'object') {
@@ -71,7 +72,7 @@ function deepClone(obj: any): any {
     selector: 'app-series-card',
     imports: [RelationshipPipe, CardActionablesComponent, DefaultValuePipe, DownloadIndicatorComponent,
         FormsModule, ImageComponent, NgbProgressbar, NgbTooltip, RouterLink, TranslocoDirective,
-        SeriesFormatComponent, DecimalPipe],
+        SeriesFormatComponent, DecimalPipe, PublicationStatusPipe],
     templateUrl: './series-card.component.html',
     styleUrls: ['./series-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
